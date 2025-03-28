@@ -1,9 +1,12 @@
 import React from 'react'
+import Hero from '@/components/hero'
+import LandingForm from '@/components/landingForm';
 
 const page = () => {
   return (
-    <div className='flex justify-center items-center h-screen w-full bg-teal-400'>
-      <h1 className='text-7xl font-extrabold text-white'>Mera pyara homepage</h1>
+    <div className='w-full flex flex-col'>
+      <Hero/>
+      <LandingForm />
     </div>
   )
 }
