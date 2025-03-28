@@ -16,31 +16,31 @@ const getRecommendation = async (req, res) => {
            5. Health score (1-100)
         `;
 
-const generatedText = await ai.generateResult(prompt);
+        const generatedText = await ai.generateResult(prompt);
 
 
-const result = generatedText.split("\n").filter(line => line.trim());
+        const result = generatedText.split("\n").filter(line => line.trim());
 
 
-const title = result[0].trim();
+        const title = result[0].trim();
 
 
-const ingredientsList = result[1].trim();
+        const ingredientsList = result[1].trim();
 
 
-let instructions = result.slice(2, result.length - 2).join(" ").trim();
+        let instructions = result.slice(2, result.length - 2).join(" ").trim();
 
 
-const regex = /(\d+)\s*(?:minutes|min)/i;
+        const regex = /(\d+)\s*(?:minutes|min)/i;
         const cookingTimeMatch = generatedText.match(regex);
         const cookingTime = cookingTimeMatch ? cookingTimeMatch[1] : "N/A";
 
-// Remove cooking time from instructions if it was mistakenly included
-instructions = instructions.replace(regex, "").trim();
+        // Remove cooking time from instructions if it was mistakenly included
+        instructions = instructions.replace(regex, "").trim();
 
-// Extract health score from the last line
-const healthScore = parseInt(result[result.length - 1].trim(), 10);
-        
+        // Extract health score from the last line
+        const healthScore = parseInt(result[result.length - 1].trim(), 10);
+
 
         const newRecipe = new Recipe({
             title,
@@ -48,7 +48,7 @@ const healthScore = parseInt(result[result.length - 1].trim(), 10);
             instructions,
             cookingTime,
             healthScore,
-           
+
         });
         await newRecipe.save();
 
