@@ -12,7 +12,7 @@ const hero = () => {
           </h3>
         </div>
         <div className="w-[70%]">
-          <p className="text-[#797575] font-semibold text-center px-8">
+          <p className="text-[#A97C89] font-semibold text-center px-8">
             Get ready to explore a world of flavors with AI-powered recipe
             suggestions! Whether you have specific ingredients or just a
             craving, we help you discover the perfect dish. Say goodbye to
