@@ -2,25 +2,36 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 
-const MainForm = ({fetchRecipes}) => {
-  const [inputText, setInputText] = useState(""); // Temporary input text
-  const [ingredients, setIngredients] = useState([]); // Stores final ingredients on submit
+const MainForm = ({ fetchRecipes }) => {
+  const [inputText, setInputText] = useState(""); // User's input text
+  const [ingredients, setIngredients] = useState([]); // Stored ingredients for logging or other use
 
   const handleChange = (e) => {
-    setInputText(e.target.value); // Update text input only
+    setInputText(e.target.value); // Update text input
   };
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent page reload
-    if (inputText.trim() === "") return; // Ignore empty submissions
 
-    setIngredients(inputText.split(",").map((item) => item.trim())); // Store only the latest input
-    setInputText("");
-    fetchRecipes(ingredients) ;
+    if (inputText.trim() === "") return; // Ignore empty input
+
+    const ingredientsArray = inputText
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0); // Remove empty items
+
+    if (ingredientsArray.length === 0) {
+      alert("Please enter at least one valid ingredient.");
+      return;
+    }
+
+    setIngredients(ingredientsArray); // Optional: For logging/debugging
+    setInputText(""); // Clear the input field
+    fetchRecipes(ingredientsArray); // ✅ Send correct, fresh data to parent
   };
 
   useEffect(() => {
-    console.log(ingredients); // Logs whenever ingredients state updates
+    console.log("Updated ingredients:", ingredients);
   }, [ingredients]);
 
   return (
@@ -41,7 +52,6 @@ const MainForm = ({fetchRecipes}) => {
           <AiOutlineSend size={28} />
         </button>
       </form>
-
     </div>
   );
 };
