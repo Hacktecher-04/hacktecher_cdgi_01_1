@@ -3,14 +3,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { IoReturnUpBack } from "react-icons/io5";
 import axios from "axios";
+import {useRouter} from "next/navigation"
 
-function LoginPage() {
+function LoginPage() {  
+  const router = useRouter(); 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Handle input change
   const handleChange = (e) => {
@@ -34,6 +37,11 @@ function LoginPage() {
       );
 
       setMessage(response.data.message || "Login successful!");
+      setIsSuccess(()=>!isSuccess);
+      // push to home page
+      setTimeout(() => {
+        router.push("/home");
+      }, 1000);
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed!");
     }
@@ -93,8 +101,13 @@ function LoginPage() {
           </button>
         </form>
 
-        {/* Display message */}
-        {message && <p className="mt-4 text-slate-600">{message}</p>}
+        {/* Display message */} 
+        {message && <p className={`mt-4 ${isSuccess ? "text-green-500" : "text-red-500"}`}>{message}{
+          isSuccess && <span className=" w-full text-center mt-4 text-green-500">
+            <br />
+            redirecting....
+          </span>
+        }</p>}
       </div>
     </div>
   );
