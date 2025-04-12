@@ -14,11 +14,11 @@ const getRecommendation = async (req, res) => {
         }
 
         const prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe with:
-           1. Recipe name (short and clear without any special characters and give only name )
-           2. Brief list of ingredients (comma-separated, max 5 items)
-           3. Short cooking instructions ( simple and clear short para max 2 lines)
-           4. Estimated cooking time (in minutes)
-           5. Health score (1-100)
+           - Recipe name (short and clear without any special characters and give only name )
+           - Brief list of ingredients (comma-separated, max 5 items)
+           - Short cooking instructions ( simple and clear short para max 2 lines)
+           - Estimated cooking time (in minutes)
+           - Health score (1-100)
         `;
 
         const generatedText = await ai.generateResult(prompt);

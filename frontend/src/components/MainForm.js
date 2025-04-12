@@ -1,38 +1,31 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 
 const MainForm = ({ fetchRecipes }) => {
-  const [inputText, setInputText] = useState(""); // User's input text
-  const [ingredients, setIngredients] = useState([]); // Stored ingredients for logging or other use
+  const [inputText, setInputText] = useState(""); // Just track the input box
 
   const handleChange = (e) => {
-    setInputText(e.target.value); // Update text input
+    setInputText(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page reload
-
-    if (inputText.trim() === "") return; // Ignore empty input
+    e.preventDefault();
+    if (inputText.trim() === "") return;
 
     const ingredientsArray = inputText
       .split(",")
       .map((item) => item.trim())
-      .filter((item) => item.length > 0); // Remove empty items
+      .filter((item) => item.length > 0);
 
     if (ingredientsArray.length === 0) {
       alert("Please enter at least one valid ingredient.");
       return;
     }
 
-    setIngredients(ingredientsArray); // Optional: For logging/debugging
-    setInputText(""); // Clear the input field
-    fetchRecipes(ingredientsArray); // ✅ Send correct, fresh data to parent
+    setInputText(""); // clear input box
+    fetchRecipes(ingredientsArray); // no need to store in state
   };
-
-  useEffect(() => {
-    console.log("Updated ingredients:", ingredients);
-  }, [ingredients]);
 
   return (
     <div className="w-full grow-1 bg-slate-100 flex flex-col px-6">
