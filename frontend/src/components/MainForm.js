@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 
-const MainForm = () => {
+const MainForm = ({fetchRecipes}) => {
   const [inputText, setInputText] = useState(""); // Temporary input text
   const [ingredients, setIngredients] = useState([]); // Stores final ingredients on submit
 
@@ -15,7 +15,8 @@ const MainForm = () => {
     if (inputText.trim() === "") return; // Ignore empty submissions
 
     setIngredients(inputText.split(",").map((item) => item.trim())); // Store only the latest input
-    setInputText(""); // Clear input field after submission
+    setInputText("");
+    fetchRecipes(ingredients) ;
   };
 
   useEffect(() => {

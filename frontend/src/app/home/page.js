@@ -9,11 +9,9 @@ const HomePage = () => {
   const [recipeData, setRecipeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchRecipes = async (ingredients) => {
       try {
-        const response = await axios.get("YOUR_BACKEND_API_URL/recipes"); // Replace with your backend API
+        const response = await axios.post("http://localhost:5000/api/recipe/recommendation", {ingredients}); // Replace with your backend API
         setRecipeData(response.data);
       } catch (err) {
         setError("Failed to fetch recipes. Please try again.");
@@ -22,31 +20,16 @@ const HomePage = () => {
       }
     };
 
-    fetchRecipes();
-  }, []);
-
   return (
     <div className="h-[100vh]">
       <Navbar />
       <div className="w-full flex bg-gray-100">
         <div className="h-[90vh] w-full bg-slate-100 flex flex-col">
           <div className="h-[90%] w-full flex flex-wrap justify-center items-center gap-4">
-            {loading ? (
-              <p>Loading recipes...</p>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
-            ) : recipeData.length > 0 ? (
-              recipeData.map((recipe, index) => (
-                <RecipeCard key={index} recipe={recipe} />
-              ))
-            ) : (
-              <p className="text-gray-500 text-lg font-semibold">
-                Enter a recipe to get started...
-              </p>
-            )}
+            <RecipeCard recipe={recipeData} />
           </div>
           <div className="w-full bg-slate-100 flex justify-center max-h-[10%]">
-            <MainForm />
+            <MainForm fetchRecipes = {fetchRecipes}/>
           </div>
         </div>
       </div>

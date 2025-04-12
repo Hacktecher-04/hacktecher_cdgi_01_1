@@ -6,7 +6,12 @@ dotenv.config();
 
 const getRecommendation = async (req, res) => {
     try {
-        const { ingredients, userId } = req.body;
+        const { ingredients } = req.body;
+
+        // Validate input
+        if (!Array.isArray(ingredients) || ingredients.length === 0) {
+            return res.status(400).json({ error: "Ingredients must be a non-empty array." });
+        }
 
         const prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe with:
            1. Recipe name (short and clear without any special characters and give only name )
@@ -18,45 +23,54 @@ const getRecommendation = async (req, res) => {
 
         const generatedText = await ai.generateResult(prompt);
 
+        console.log("Generated Text:", generatedText); // helpful for debugging
 
         const result = generatedText.split("\n").filter(line => line.trim());
 
+        // Validate AI response
+        if (result.length < 5) {
+            return res.status(400).json({ error: "AI response is incomplete or incorrectly formatted." });
+        }
 
-        const title = result[0].trim();
+        const title = result[0]?.trim() || "Untitled";
+        const ingredientsList = result[1]?.trim() || "N/A";
 
-
-        const ingredientsList = result[1].trim();
-
-
+        // Join all lines between 2nd and 2nd-to-last as instructions
         let instructions = result.slice(2, result.length - 2).join(" ").trim();
 
-
+        // Extract cooking time from the whole text
         const regex = /(\d+)\s*(?:minutes|min)/i;
         const cookingTimeMatch = generatedText.match(regex);
         const cookingTime = cookingTimeMatch ? cookingTimeMatch[1] : "N/A";
 
-        // Remove cooking time from instructions if it was mistakenly included
+        // Remove cooking time from instructions if it’s mistakenly included
         instructions = instructions.replace(regex, "").trim();
 
-        // Extract health score from the last line
-        const healthScore = parseInt(result[result.length - 1].trim(), 10);
-
+        // Extract health score from last line
+        const healthScoreLine = result[result.length - 1]?.trim();
+        const healthScore = parseInt(healthScoreLine, 10);
+        const validHealthScore = !isNaN(healthScore) ? healthScore : 50;
 
         const newRecipe = new Recipe({
             title,
             ingredients: ingredientsList,
             instructions,
             cookingTime,
-            healthScore,
-
+            healthScore: validHealthScore
         });
+
         await newRecipe.save();
 
         res.status(201).json({
-            title, ingredients: ingredientsList, instructions, cookingTime, healthScore
+            title,
+            ingredients: ingredientsList,
+            instructions,
+            cookingTime,
+            healthScore: validHealthScore
         });
+
     } catch (error) {
-        console.log(error);
+        console.error("Error in getRecommendation:", error);
         res.status(500).json({ message: "Something went wrong" });
     }
 };
