@@ -29,10 +29,10 @@ const Navbar = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/logout', {}, { withCredentials: true }); // Ensure cookies are sent
+      await axios.get('http://localhost:5000/api/auth/logout', {}, { withCredentials: true }); // Ensure cookies are sent
       localStorage.removeItem('authToken'); // If using JWTs
       alert("Logged out successfully!"); // Optional: Use a toast notification
-      router.push('/login'); // Redirect to login page
+      router.push('/'); // Redirect to login page
     } catch (error) {
       console.error('Logout failed:', error.response?.data || error.message);
       alert("Logout failed. Please try again.");
