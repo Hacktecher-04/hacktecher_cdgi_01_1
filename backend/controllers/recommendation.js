@@ -16,14 +16,12 @@ const getRecommendation = async (req, res) => {
         const prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe with:
            - Recipe name (short and clear without any special characters and give only name )
            - Brief list of ingredients (comma-separated, max 5 items)
-           - Short cooking instructions ( simple and clear short para max 2 lines)
+           - cooking instructions
            - Estimated cooking time (in minutes)
-           - Health score (1-100)
+           - Health score (1-100 and not give ideas about score)
         `;
 
-        const generatedText = await ai.generateResult(prompt);
-
-        console.log("Generated Text:", generatedText); // helpful for debugging
+        const generatedText = await ai.generateResult(prompt);  
 
         const result = generatedText.split("\n").filter(line => line.trim());
 
@@ -37,6 +35,7 @@ const getRecommendation = async (req, res) => {
 
         // Join all lines between 2nd and 2nd-to-last as instructions
         let instructions = result.slice(2, result.length - 2).join(" ").trim();
+        console.log(instructions)
 
         // Extract cooking time from the whole text
         const regex = /(\d+)\s*(?:minutes|min)/i;
@@ -45,11 +44,11 @@ const getRecommendation = async (req, res) => {
 
         // Remove cooking time from instructions if it’s mistakenly included
         instructions = instructions.replace(regex, "").trim();
-
-        // Extract health score from last line
         const healthScoreLine = result[result.length - 1]?.trim();
-        const healthScore = parseInt(healthScoreLine, 10);
+        const healthScore = parseInt(healthScoreLine.split(':')[1], 10);
         const validHealthScore = !isNaN(healthScore) ? healthScore : 50;
+
+
 
         const newRecipe = new Recipe({
             title,
