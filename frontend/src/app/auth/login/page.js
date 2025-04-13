@@ -27,7 +27,7 @@ function LoginPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
         formData,
         {
           headers: {
@@ -36,18 +36,24 @@ function LoginPage() {
         }
       );
 
-      setMessage(response.data.message || "Login successful!");
-      setIsSuccess(() => !isSuccess);
+      if (response.data.token) {
+        setMessage("Login successful!");
+        setIsSuccess(true);
 
-      
-      // push to home page
-      setTimeout(() => {
-        router.push("/home");
-      }, 1000);
+        // Save token to localStorage or cookies if needed
+        localStorage.setItem("token", response.data.token);
 
-
+        // Redirect to home page
+        setTimeout(() => {
+          router.push("/home");
+        }, 1000);
+      } else {
+        setMessage("Login failed! Token not received.");
+        setIsSuccess(false);
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed!");
+      setIsSuccess(false);
     }
   };
 
