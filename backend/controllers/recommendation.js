@@ -12,14 +12,39 @@ const getRecommendation = async (req, res) => {
         if (!Array.isArray(ingredients) || ingredients.length === 0) {
             return res.status(400).json({ error: "Ingredients must be a non-empty array." });
         }
+        // Check if the ingredients are valid and suggest alternatives if needed
+        const invalidIngredients = ingredients.filter(ingredient => typeof ingredient !== 'string' || ingredient.trim() === '');
+        if (invalidIngredients.length > 0) {
+            return res.status(400).json({ 
+            error: "Some ingredients are invalid. Please provide valid ingredient names.",
+            invalidIngredients
+            });
+        }
 
-        const prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe with:
-           - Recipe name (short and clear without any special characters and give only name )
-           - Brief list of ingredients (comma-separated, max 5 items)
-           - cooking instructions
-           - Estimated cooking time (in minutes)
-           - Health score (1-100 and not give ideas about score)
-        `;
+        // Determine the type of prompt based on ingredients
+        const isVegetableOrFruit = ingredients.every(ingredient => {
+            const lowerCaseIngredient = ingredient.toLowerCase();
+            return lowerCaseIngredient.includes("vegetable") || lowerCaseIngredient.includes("fruit");
+        });
+
+        let prompt;
+        if (isVegetableOrFruit) {
+            prompt = `I have these vegetables or fruits: ${ingredients.join(', ')}. Suggest only one recipe with:
+               - Recipe name (short and clear without any special characters and give only name)
+               - Brief list of ingredients (comma-separated, max 5 items)
+               - Cooking instructions
+               - Estimated cooking time (in minutes)
+               - Health score (1-100 and not give ideas about score)
+            `;
+        } else {
+            prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe with:
+               - Recipe name (short and clear without any special characters and give only name)
+               - Brief list of ingredients (comma-separated, max 5 items)
+               - Cooking instructions
+               - Estimated cooking time (in minutes)
+               - Health score (1-100 and not give ideas about score)
+            `;
+        }
 
         const generatedText = await ai.generateResult(prompt);  
 
@@ -35,7 +60,6 @@ const getRecommendation = async (req, res) => {
 
         // Join all lines between 2nd and 2nd-to-last as instructions
         let instructions = result.slice(2, result.length - 2).join(" ").trim();
-        console.log(instructions)
 
         // Extract cooking time from the whole text
         const regex = /(\d+)\s*(?:minutes|min)/i;
@@ -47,8 +71,6 @@ const getRecommendation = async (req, res) => {
         const healthScoreLine = result[result.length - 1]?.trim();
         const healthScore = parseInt(healthScoreLine.split(':')[1], 10);
         const validHealthScore = !isNaN(healthScore) ? healthScore : 50;
-
-
 
         const newRecipe = new Recipe({
             title,

@@ -12,4 +12,3 @@ const generateResult = async (prompt) => {
 
 module.exports = { generateResult };
 
-

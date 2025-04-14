@@ -42,10 +42,10 @@ const HomePage = () => {
       <Navbar />
       <div className="w-full flex bg-gray-100">
         <div className="h-[90vh] w-full bg-slate-100 flex flex-col">
-          <div className="h-[90%] w-full flex flex-wrap justify-center items-center gap-4">
+          <div className="h-[90%] w-full flex flex-wrap justify-center items-center gap-4 p-4 sm:p-2">
             <RecipeCard recipe={recipeData} />
           </div>
-          <div className="w-full bg-slate-100 flex justify-center max-h-[10%]">
+          <div className="w-full bg-slate-100 flex justify-center max-h-[10%] p-2 sm:p-1">
             <MainForm fetchRecipes={fetchRecipes} />
           </div>
         </div>
