@@ -6,7 +6,7 @@ import axios from "axios";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    userName: "",
     email: "",
     password: "",
   });
@@ -53,8 +53,8 @@ const RegisterPage = () => {
             <label className="block text-slate-700 font-medium mb-1">User Name</label>
             <input
               type="text"
-              name="username"
-              value={formData.username}
+              name="userName"
+              value={formData.userName}
               onChange={handleChange}
               className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter Your Name"
