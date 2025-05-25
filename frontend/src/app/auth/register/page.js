@@ -37,7 +37,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="w-full relative h-screen flex justify-center items-center bg-slate-200 p-10">
+    <div className="w-full relative h-screen flex justify-center items-center bg-gradient-to-bl from-rose-500 via-slate-100 to-pink-500">
       <span className="absolute top-5 left-10 hover:scale-[1.1]">
         <Link href="/">
           <IoReturnUpBack size={45} />
@@ -56,7 +56,7 @@ const RegisterPage = () => {
               name="userName"
               value={formData.userName}
               onChange={handleChange}
-              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
               placeholder="Enter Your Name"
               required
             />
@@ -70,7 +70,7 @@ const RegisterPage = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
               placeholder="Enter Your Email"
               required
             />
@@ -84,7 +84,7 @@ const RegisterPage = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
               placeholder="Enter Your Password"
               required
             />

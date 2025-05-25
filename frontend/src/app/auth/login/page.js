@@ -58,10 +58,10 @@ function LoginPage() {
   };
 
   return (
-    <div className="w-full relative h-screen flex justify-center items-center bg-slate-200 p-10">
+    <div className="w-full relative h-screen flex justify-center items-center bg-gradient-to-br from-rose-500 via-slate-100 to-pink-500">
       <span className="absolute top-5 left-10 hover:scale-[1.1]">
         <Link href="/">
-          <IoReturnUpBack size={45} />
+          <IoReturnUpBack size={45} color="#fff" />
         </Link>
       </span>
       <div className="border flex flex-col justify-center items-center rounded-lg p-10 min-w-[400px] shadow-lg">
@@ -80,7 +80,7 @@ function LoginPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
               placeholder="Enter Your Email"
               required
             />
@@ -96,7 +96,7 @@ function LoginPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
               placeholder="Enter Your Password"
               required
             />
@@ -105,7 +105,7 @@ function LoginPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            className="w-full px-4 py-2 bg-pink-400 text-white text-bold rounded hover:bg-pink-800 cursor-pointer transition"
           >
             Submit
           </button>

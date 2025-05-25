@@ -15,9 +15,9 @@ const getRecommendation = async (req, res) => {
         // Check if the ingredients are valid and suggest alternatives if needed
         const invalidIngredients = ingredients.filter(ingredient => typeof ingredient !== 'string' || ingredient.trim() === '');
         if (invalidIngredients.length > 0) {
-            return res.status(400).json({ 
-            error: "Some ingredients are invalid. Please provide valid ingredient names.",
-            invalidIngredients
+            return res.status(400).json({
+                error: "Some ingredients are invalid. Please provide valid ingredient names.",
+                invalidIngredients
             });
         }
 
@@ -29,24 +29,31 @@ const getRecommendation = async (req, res) => {
 
         let prompt;
         if (isVegetableOrFruit) {
-            prompt = `I have these vegetables or fruits: ${ingredients.join(', ')}. Suggest only one recipe with:
-               - Recipe name (short and clear without any special characters and give only name)
-               - Brief list of ingredients (comma-separated, max 5 items)
-               - Cooking instructions
-               - Estimated cooking time (in minutes)
-               - Health score (1-100 and not give ideas about score)
+            prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe. Respond in exactly 5 lines in this format:
+
+1. Recipe name (short, clear, no special characters)
+2. Brief list of ingredients (comma-separated, max 5 items)
+3. Cooking instructions (in 1-2 sentences)
+4. Cooking time in minutes (just the number, no text)
+5. Health score (1 to 100, just the number without explanation)
+
+Do not include any labels, headings, or extra text. Just return the 5 values in order, each on a new line.
             `;
         } else {
-            prompt = `I have these ingredients: ${ingredients.join(', ')}. Suggest only one recipe with:
-               - Recipe name (short and clear without any special characters and give only name)
-               - Brief list of ingredients (comma-separated, max 5 items)
-               - Cooking instructions
-               - Estimated cooking time (in minutes)
-               - Health score (1-100 and not give ideas about score)
+            prompt = `I have these vegetables/fruits: ${ingredients.join(', ')}. Suggest only one recipe. Respond in exactly 5 lines in this format:
+
+1. Recipe name (short, clear, no special characters)
+2. Brief list of ingredients (comma-separated, max 5 items)
+3. Cooking instructions (in 1-2 sentences)
+4. Cooking time in minutes (just the number, no text)
+5. Health score (1 to 100, just the number without explanation)
+
+Do not include any labels, headings, or extra text. Just return the 5 values in order, each on a new line.
+
             `;
         }
 
-        const generatedText = await ai.generateResult(prompt);  
+        const generatedText = await ai.generateResult(prompt);
 
         const result = generatedText.split("\n").filter(line => line.trim());
 
@@ -63,8 +70,9 @@ const getRecommendation = async (req, res) => {
 
         // Extract cooking time from the whole text
         const regex = /(\d+)\s*(?:minutes|min)/i;
-        const cookingTimeMatch = generatedText.match(regex);
-        const cookingTime = cookingTimeMatch ? cookingTimeMatch[1] : "N/A";
+        const cookingTimeLine = result[3]?.trim();
+        const cookingTime = /^\d+$/.test(cookingTimeLine) ? cookingTimeLine : "N/A";
+
 
         // Remove cooking time from instructions if it’s mistakenly included
         instructions = instructions.replace(regex, "").trim();
