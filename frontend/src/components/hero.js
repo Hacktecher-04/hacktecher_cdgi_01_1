@@ -32,7 +32,7 @@ const hero = () => {
           </button>
           </Link>
         </div>
-        <img src="chef.png" className="absolute left-2 bottom-0 h-[290px]" />
+        <img src="chef.png" className="absolute left-1 -bottom-7 h-[290px]" />
       </div>
     </>
   );
